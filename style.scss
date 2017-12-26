@@ -1,0 +1,39 @@
+@import "reset.scss";
+
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.container {
+    display: flex;
+
+    .players {
+        border: 1px solid #b0abab;
+        border-radius: 2px;
+        padding: 80px;
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center;
+
+        .score {
+            font-size: 20px;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+    }
+
+    .player-one {
+        margin-right: 40px;
+    }
+}
+
+.button {
+    padding: 20px;
+    border-radius: 5px;
+    background: #e4e2df;
+    margin-top: 40px;
+}
