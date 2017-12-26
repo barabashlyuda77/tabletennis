@@ -27,7 +27,11 @@ body {
     }
 
     .player-one {
-        margin-right: 40px;
+        margin-right: 20px;
+    }
+
+    .player-two {
+        margin-left: 20px;
     }
 }
 
@@ -36,4 +40,11 @@ body {
     border-radius: 5px;
     background: #e4e2df;
     margin-top: 40px;
+    cursor: pointer;
+}
+
+.game-over {
+    margin-top: 40px;
+    font-size: 24;
+    color: green;
 }
