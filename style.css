@@ -68,6 +68,10 @@ body {
   display: flex;
 }
 
+.container .active {
+  background: #bdb1b1;
+}
+
 .container .players {
   border: 1px solid #b0abab;
   border-radius: 2px;
