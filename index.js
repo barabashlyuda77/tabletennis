@@ -53,12 +53,14 @@ function getNameOfWinner() {
     return playerName;
 }
 
-function checkIfGameOver() {
-    if (somebodyWon()) {
-        buttonServe.removeEventListener('click', showResult);
-        resetServesAfterGameOver();
-        showGameMessage(getNameOfWinner());
-    }
+function deactivateButtonServe() {
+    buttonServe.removeEventListener('click', showResult);
+}
+
+function endGame() {
+    resetServesAfterGameOver();
+    showGameMessage(getNameOfWinner());
+    deactivateButtonServe();
 }
 
 function changeServe() {
@@ -78,12 +80,24 @@ function makeServe() {
     serveCounter += 1;
 }
 
-function playerOneWonServe() {
+function incrementPlayerOneScore() {
     playerOneScore += 1;
 }
 
-function playerTwoWonServe() {
+function incrementPlayerTwoScore() {
     playerTwoScore += 1;
+}
+
+function displayPlayerTwoScore() {
+    scoreTwo.innerHTML = playerTwoScore;
+}
+
+function displayPlayerOneScore() {
+    scoreOne.innerHTML = playerOneScore;
+}
+
+function playerTwoWonServe() {
+    return createRandomNum() === 0;
 }
 
 function showResult() {
@@ -92,28 +106,48 @@ function showResult() {
         changeServe();
         resetServeCounter();
     }
-    if (createRandomNum() === 0) {
-        playerTwoWonServe();
-        scoreTwo.innerHTML = playerTwoScore;
+
+    if (playerTwoWonServe()) {
+        incrementPlayerTwoScore();
+        displayPlayerTwoScore();
     } else {
-        playerOneWonServe();
-        scoreOne.innerHTML = playerOneScore;
+        incrementPlayerOneScore();
+        displayPlayerOneScore();
     }
-    checkIfGameOver();
+
+    if (somebodyWon()) {
+        endGame();
+    }
 }
 
-function resetGame() {
-    scoreTwo.innerHTML = 0;
-    scoreOne.innerHTML = 0;
+function resetScore() {
     playerOneScore = 0;
     playerTwoScore = 0;
+}
+
+function hideGameMessage() {
     gameOver.innerHTML = '';
+}
+
+function activatePlayerOne() {
     if (playerTwo.classList.contains('active')) {
         playerTwo.classList.remove('active');
     }
     playerOne.classList.add('active');
+}
+
+function activateButtonServe() {
     buttonServe.addEventListener('click', showResult);
 }
 
-buttonServe.addEventListener('click', showResult);
+function resetGame() {
+    resetScore();
+    displayPlayerOneScore();
+    displayPlayerTwoScore();
+    hideGameMessage();
+    activatePlayerOne();
+    activateButtonServe();
+}
+
+activateButtonServe();
 buttonReset.addEventListener('click', resetGame);
