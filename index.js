@@ -1,21 +1,25 @@
 const buttonServe = document.querySelector('.button-serve');
 const buttonReset = document.querySelector('.button-reset');
-let playerOne = document.querySelector('.player-one');
-let playerTwo = document.querySelector('.player-two');
-let scoreOne = document.querySelector('.score-one');
-let scoreTwo = document.querySelector('.score-two');
-let gameOver = document.querySelector('.game-over');
+const playerOne = document.querySelector('.player-one');
+const playerTwo = document.querySelector('.player-two');
+const scoreOne = document.querySelector('.score-one');
+const scoreTwo = document.querySelector('.score-two');
+const gameOver = document.querySelector('.game-over');
 
+const PLAYER_ONE_NAME = 'Player 1';
+const PLAYER_TWO_NAME = 'Player 2';
+const MAX_GAME_SCORE = 11;
+const SERVES_PER_PLAYER = 2;
+
+let playerOneScore = 0;
+let playerTwoScore = 0;
+let serveCounter = 0;
 
 function createRandomNum() {
     return Math.round(Math.random());
 }
 
-let sumScoreOne = 0;
-let sumScoreTwo = 0;
-let clickCounter = 0;
-
-function checkIfActive() {
+function resetServesAfterGameOver() {
     if (playerOne.classList.contains('active')) {
         playerOne.classList.remove('active')
     } else if (playerTwo.classList.contains('active')) {
@@ -23,42 +27,86 @@ function checkIfActive() {
     }
 }
 
-function endGame() {
-    if (sumScoreOne === 11) {
-        gameOver.innerHTML = 'Game over. Winner is Player 1';
+function playerOneWon() {
+    return playerOneScore === MAX_GAME_SCORE;
+}
+
+function playerTwoWon() {
+    return playerTwoScore === MAX_GAME_SCORE;
+}
+
+function somebodyWon() {
+    return playerOneWon() || playerTwoWon();
+}
+
+function showGameMessage(playerName) {
+    gameOver.innerHTML = 'Game over. Winner is ' + playerName;
+}
+
+function getNameOfWinner() {
+    let playerName = '';
+    if (playerOneWon()) {
+        playerName = PLAYER_ONE_NAME;
+    } else if (playerTwoWon()) {
+        playerName = PLAYER_TWO_NAME;
+    }
+    return playerName;
+}
+
+function checkIfGameOver() {
+    if (somebodyWon()) {
         buttonServe.removeEventListener('click', showResult);
-        checkIfActive();
-    } else if (sumScoreTwo === 11) {
-        gameOver.innerHTML = 'Game over. Winner is Player 2';
-        buttonServe.removeEventListener('click', showResult);
-        checkIfActive();
+        resetServesAfterGameOver();
+        showGameMessage(getNameOfWinner());
     }
 }
 
-function showResult() {
-    clickCounter += 1;
-    if (clickCounter > 1) {
-        clickCounter = 0;
-        playerOne.classList.toggle('active');
-        playerTwo.classList.toggle('active');
-    }
+function changeServe() {
+    playerOne.classList.toggle('active');
+    playerTwo.classList.toggle('active');
+}
 
-    let random = createRandomNum();
-    if (random === 0) {
-        sumScoreTwo += 1;
-        scoreTwo.innerHTML = sumScoreTwo;
-    } else {
-        sumScoreOne += random;
-        scoreOne.innerHTML = sumScoreOne;
+function resetServeCounter() {
+    serveCounter = 0;
+}
+
+function currentPlayerServedAllServes() {
+    return serveCounter >= SERVES_PER_PLAYER;
+}
+
+function makeServe() {
+    serveCounter += 1;
+}
+
+function playerOneWonServe() {
+    playerOneScore += 1;
+}
+
+function playerTwoWonServe() {
+    playerTwoScore += 1;
+}
+
+function showResult() {
+    makeServe();
+    if (currentPlayerServedAllServes()) {
+        changeServe();
+        resetServeCounter();
     }
-    endGame();
+    if (createRandomNum() === 0) {
+        playerTwoWonServe();
+        scoreTwo.innerHTML = playerTwoScore;
+    } else {
+        playerOneWonServe();
+        scoreOne.innerHTML = playerOneScore;
+    }
+    checkIfGameOver();
 }
 
 function resetGame() {
     scoreTwo.innerHTML = 0;
     scoreOne.innerHTML = 0;
-    sumScoreOne = 0;
-    sumScoreTwo = 0;
+    playerOneScore = 0;
+    playerTwoScore = 0;
     gameOver.innerHTML = '';
     if (playerTwo.classList.contains('active')) {
         playerTwo.classList.remove('active');
